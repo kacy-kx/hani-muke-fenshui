@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>木刻分水 · The Notched Ledger</title>
+<meta name="description" content="哈尼梯田木刻分水制度的可计算水账本：按亩/按户/按时段轮灌三种分水规则 → 每户水量、基尼系数、干旱缺口与木刻刻口宽度，离线单页作品。">
+<meta name="color-scheme" content="dark light">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div class="progress" id="progress" aria-hidden="true"><i></i></div>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-txt"><b id="brand-zh">木刻分水</b><em id="brand-en">The Notched Ledger</em></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="章节导航"></nav>
+    <div class="bar-end">
+      <button class="lang" id="lang" type="button" aria-label="切换语言 / Switch language">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <p id="foot-line1"></p>
+    <p id="foot-line2"></p>
+  </div>
+</footer>
+
+<script src="core.js"></script>
+<script src="content.js"></script>
+<script src="algo.js"></script>
+<script src="sim.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
