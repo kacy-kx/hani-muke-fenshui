@@ -40,9 +40,12 @@
 
 /* ================= 2. 舞台与翻页 ================= */
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans);color:var(--ink)}
-#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-#deck{position:relative;width:1280px;height:720px;transform-origin:center center;
+html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans);color:var(--ink);
+  -webkit-text-size-adjust:100%;text-size-adjust:100%}
+#stage{position:fixed;inset:0;overflow:hidden}
+/* 绝对定位 + translate 居中：避免在 flex 容器里被压缩（手机窄屏会挤成 119px 宽导致错位） */
+#deck{position:absolute;left:50%;top:50%;width:1280px;height:720px;flex:none;
+  transform:translate(-50%,-50%) scale(1);transform-origin:center center;
   box-shadow:0 24px 80px rgba(0,0,0,.55)}
 .slide{position:absolute;inset:0;background:var(--paper);overflow:hidden;
   opacity:0;visibility:hidden;transition:opacity .38s ease;pointer-events:none}
@@ -175,11 +178,16 @@ html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans)
 #hud .nav:hover{background:rgba(201,183,154,.15)}
 #bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--water),var(--water-l));
   width:0;z-index:60;transition:width .3s}
+/* 手机竖屏提示（横屏或大屏自动隐藏） */
+#rotate{display:none;position:fixed;left:0;right:0;bottom:10px;text-align:center;z-index:30;
+  font-size:11px;letter-spacing:.18em;color:rgba(246,241,230,.62);pointer-events:none}
+@media (orientation:portrait) and (max-width:700px){ #rotate{display:block} }
 @media print{ .slide{position:relative;opacity:1;visibility:visible;page-break-after:always} }
 </style>
 </head>
 <body>
 <div id="bar"></div>
+<div id="rotate">↻ 横屏观看体验更佳</div>
 <div id="stage"><div id="deck">
 
 <!-- ═════════════════ P01 封面 ═════════════════ -->
@@ -250,18 +258,19 @@ html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans)
   <div class="pad">
     <div class="z" style="margin-top:22px">
       <div class="eyebrow">汇报目录</div>
-      <div class="h1">八个板块，从<em>一道刻口</em>讲到一张水账</div>
+      <div class="h1">九个板块，从<em>一道刻口</em>讲到一张水账</div>
       <div class="rule-line"></div>
     </div>
-    <div class="toc z" style="margin-top:6px">
+    <div class="toc z" style="margin-top:6px;grid-template-columns:repeat(3,1fr);gap:12px">
       <a href="#" data-go="2"><div class="t-no">01 / CONTEXT</div><div class="t-t">项目背景</div><div class="t-d">分水难题的由来 · 传统制度的传承困境</div></a>
       <a href="#" data-go="4"><div class="t-no">02 / POSITION</div><div class="t-t">定位与创意</div><div class="t-d">一把可填参数的尺子 · 三大创新点</div></a>
       <a href="#" data-go="6"><div class="t-no">03 / RULES</div><div class="t-t">三种分水规则</div><div class="t-d">按亩 · 按户 · 轮灌：公式与后果</div></a>
       <a href="#" data-go="10"><div class="t-no">04 / FAIRNESS</div><div class="t-t">双公平口径</div><div class="t-d">水量基尼 vs 亩均基尼的公开冲突</div></a>
       <a href="#" data-go="11"><div class="t-no">05 / HYDRAULICS</div><div class="t-t">水工公式</div><div class="t-d">矩形薄壁堰：份额 → 刻口宽度</div></a>
       <a href="#" data-go="12"><div class="t-no">06 / DATA</div><div class="t-t">实测数据</div><div class="t-d">四场景对比 · 干旱扫描 · 交互演示</div></a>
-      <a href="#" data-go="15"><div class="t-no">07 / PROOF</div><div class="t-t">可验证性</div><div class="t-d">33 条断言 · 13 项端到端 · 零依赖</div></a>
-      <a href="#" data-go="16"><div class="t-no">08 / VALUE</div><div class="t-t">价值·边界·团队</div><div class="t-d">四大场景 · 局限声明 · 分工致谢</div></a>
+      <a href="#" data-go="15"><div class="t-no">07 / DELIVERY</div><div class="t-t">到田推演</div><div class="t-d">名义分配 → 真实到田 · 稳健性 · 人为扰动</div></a>
+      <a href="#" data-go="18"><div class="t-no">08 / PROOF</div><div class="t-t">可验证性</div><div class="t-d">33 条断言 · 13 项端到端 · 零依赖</div></a>
+      <a href="#" data-go="19"><div class="t-no">09 / VALUE</div><div class="t-t">价值·边界·团队</div><div class="t-d">四大场景 · 局限声明 · 分工致谢</div></a>
     </div>
     <div class="z" style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
       <span class="chip water">调查报告 ✕</span><span class="chip water">监测平台 ✕</span>
@@ -1063,10 +1072,10 @@ html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans)
           <p>洛伦兹曲线 · 每户水量/需求柱 · 缺口红段 · <b>分水木刻刻口宽度是否可行</b> · 亩均基尼 / 水量基尼 · 需求满足率——改一次参数，全部重算。</p>
         </div>
         <div class="card" style="padding:12px 16px">
-          <h4>作品 8 个模块</h4>
+          <h4>作品 9 个模块</h4>
           <p style="line-height:2">
           <span class="chip water">问题</span><span class="chip water">三条规则</span><span class="chip clay">解剖台</span>
-          <span class="chip water">四种水账</span><span class="chip water">实测数据</span><span class="chip water">沿革</span>
+          <span class="chip water">四种水账</span><span class="chip clay">推演台</span><span class="chip water">实测数据</span><span class="chip water">沿革</span>
           <span class="chip water">术语 28 条</span><span class="chip water">来源</span></p>
         </div>
         <p class="note">※ 键盘 → 可切换章节；中英双语（EN）；内置 Web Audio 反馈链路，端到端测试逐项覆盖。</p>
@@ -1075,12 +1084,145 @@ html,body{height:100%;background:#241a12;overflow:hidden;font-family:var(--sans)
   </div>
 </section>
 
-<!-- ═════════════════ P16 可验证性证据 ═════════════════ -->
+<!-- ═════════════════ P16 到田推演 · 名义 vs 到田 ═════════════════ -->
 <section class="slide v-grid">
-  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>07 · 可验证性证据</span></header>
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>07 · 到田推演 / 名义 vs 到田</span></header>
   <div class="pad">
     <div class="z" style="margin-top:12px">
-      <div class="eyebrow">07 · 可验证性 <b>PROOF</b></div>
+      <div class="eyebrow">07 · 到田推演 / 名义 vs 到田 <b>NOMINAL → FIELD</b></div>
+      <div class="h1">纸上写得平，<em>不等于田里到得平</em></div>
+      <div class="rule-line" style="margin-bottom:8px"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:640px 1fr;gap:20px" class="z">
+      <div class="card" style="padding:12px 14px">
+        <h4 style="margin:0">每亩真正收到的水（m³/亩）：<b style="color:var(--clay)">同一张分配表，走完 900 m 沟渠</b></h4>
+        <svg viewBox="0 0 620 330" style="width:100%;margin-top:4px"><g stroke="#6B4A2F" stroke-opacity=".18"><line x1="54" y1="274.0" x2="606" y2="274.0"/><line x1="54" y1="214.0" x2="606" y2="214.0" stroke-dasharray="3 4"/><line x1="54" y1="154.0" x2="606" y2="154.0" stroke-dasharray="3 4"/><line x1="54" y1="94.0" x2="606" y2="94.0" stroke-dasharray="3 4"/><line x1="54" y1="34.0" x2="606" y2="34.0" stroke-dasharray="3 4"/></g><g font-size="10" fill="#5A4534" text-anchor="end" font-family="Consolas,monospace"><text x="48" y="277.5">0</text><text x="48" y="217.5">130</text><text x="48" y="157.5">260</text><text x="48" y="97.5">390</text><text x="48" y="37.5">520</text></g><line x1="54" y1="52.5" x2="606" y2="52.5" stroke="#B4552E" stroke-width="1.3" stroke-dasharray="6 4"/><text x="602" y="46.5" font-size="10" fill="#8f3f1e" text-anchor="end">定额 480</text><rect x="64.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="64.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="91.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" rx="2"/><text x="102.0" y="47.5" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">480</text><text x="88.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H01</text><text x="88.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">60m</text><rect x="133.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="133.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="160.0" y="64.9" width="22" height="209.1" fill="#1E7A8C" rx="2"/><text x="171.0" y="59.9" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">453</text><text x="157.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H02</text><text x="157.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">180m</text><rect x="202.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="202.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="229.0" y="76.7" width="22" height="197.3" fill="#1E7A8C" rx="2"/><text x="240.0" y="71.7" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">427</text><text x="226.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H03</text><text x="226.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">300m</text><rect x="271.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="271.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="298.0" y="87.8" width="22" height="186.2" fill="#1E7A8C" rx="2"/><text x="309.0" y="82.8" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">403</text><text x="295.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H04</text><text x="295.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">420m</text><rect x="340.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="340.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="367.0" y="98.3" width="22" height="175.7" fill="#1E7A8C" rx="2"/><text x="378.0" y="93.3" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">381</text><text x="364.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H05</text><text x="364.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">540m</text><rect x="409.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="409.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="436.0" y="108.2" width="22" height="165.8" fill="#1E7A8C" rx="2"/><text x="447.0" y="103.2" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">359</text><text x="433.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H06</text><text x="433.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">660m</text><rect x="478.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="478.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="505.0" y="117.5" width="22" height="156.5" fill="#1E7A8C" rx="2"/><text x="516.0" y="112.5" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">339</text><text x="502.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H07</text><text x="502.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">780m</text><rect x="547.0" y="52.5" width="22" height="221.5" fill="#1E7A8C" opacity=".20" rx="2"/><rect x="547.0" y="52.5" width="22" height="221.5" fill="none" stroke="#1E7A8C" stroke-opacity=".55" stroke-dasharray="3 2" rx="2"/><rect x="574.0" y="126.3" width="22" height="147.7" fill="#1E7A8C" rx="2"/><text x="585.0" y="121.3" font-size="9.5" fill="#155E6D" text-anchor="middle" font-family="Consolas,monospace">320</text><text x="571.5" y="289" font-size="10" fill="#5A4534" text-anchor="middle">H08</text><text x="571.5" y="303" font-size="9" fill="#8A7863" text-anchor="middle">900m</text><text x="330.0" y="324" font-size="10.5" fill="#5A4534" text-anchor="middle">沿渠位置：第 1 户距水源 60 m，每前进 120 m 再少一截（→）</text></svg>
+        <div class="legend" style="margin-top:2px">
+          <span><i style="background:#1E7A8C;opacity:.25;border:1px dashed #1E7A8C"></i>名义亩均（刻口写死的份额）</span>
+          <span><i style="background:#1E7A8C"></i>到田亩均（扣掉渗漏后真进田的）</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="grid-4" style="grid-template-columns:repeat(2,1fr)">
+          <div class="kpi"><div class="num">81.5%</div><div class="lbl">到田需求满足率（名义 100%）</div></div>
+          <div class="kpi"><div class="num" style="color:#8f3f1e">0.0758</div><div class="lbl">亩均基尼：名义 0.0000 → 到田</div></div>
+          <div class="kpi"><div class="num">2,062.2 <small>m³</small></div><div class="lbl">输水真渗漏（占来水 18.5%）</div></div>
+          <div class="kpi"><div class="num" style="color:#8f3f1e">319.94</div><div class="lbl">H08 末端亩均（定额的 66.7%）</div></div>
+        </div>
+        <div class="card" style="padding:12px 16px;flex:1">
+          <h4>这条差值是「距离」造成的，不是「偏心」造成的</h4>
+          <p>按亩规则在纸上给每户同样的 <b>480 m³/亩</b>（亩均基尼 = 0）。但水在土渠里每走一段就渗掉一截：
+          到达率 η = e<sup>−k·L/100</sup>（土渠 k = 0.090），渗出的水有 <b>45%</b> 会沿下级田埂回流复用，剩下的是真损失。
+          结果是<b>平均每段渠（120 m）每亩少 22.9 m³</b>：第一户 H01 拿满，末端 H08 只剩 319.94 m³/亩（缺口 621 m³）。</p>
+          <p style="margin-top:6px"><b>渠道缺水时不是「下游断流」，而是所有户按名义份额同比例缩减</b>——这正是木刻按比例分水的本意。</p>
+        </div>
+        <div class="card" style="padding:10px 14px;background:var(--wood-deep);border:none">
+          <p style="color:#F2E7D2;font-size:12.5px;line-height:1.75">
+          <b style="color:#E0A274">水量守恒自检：</b>来水 11,130.7 = 到田 9,068.5 + 真渗漏 2,062.2
+          + 田间损失 0 + 沟尾弃水 0　m³　
+          <span style="color:#8FC3CD;font-family:var(--mono)">残差 0.0134</span></p>
+        </div>
+      </div>
+    </div>
+    <p class="note z" style="margin-top:6px">※ 口径：8 户 / 23.189 亩 / 定额 480 m³·亩⁻¹ / 土渠 / 回归复用 0.45 / 相邻户间距 120 m / 上游先取。
+    全部由作品推演层 <span style="font-family:var(--mono)">engine.js · chainPlan()</span> 实算，
+    网页第 05 章「推演台」可现场调参复现，非任何真实村寨的统计。</p>
+  </div>
+</section>
+
+<!-- ═════════════════ P17 到田推演 · 稳健与人为 ═════════════════ -->
+<section class="slide v-grid">
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>07 · 到田推演 / 稳健与人为</span></header>
+  <div class="pad">
+    <div class="z" style="margin-top:12px">
+      <div class="eyebrow">07 · 到田推演 / 稳健与人为 <b>ROBUSTNESS &amp; TAMPER</b></div>
+      <div class="h1">结论扛得住扰动吗？<em>有人作弊呢？</em></div>
+      <div class="rule-line" style="margin-bottom:8px"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:600px 1fr;gap:20px" class="z">
+      <div class="card" style="padding:12px 14px">
+        <h4 style="margin:0">蒙特卡洛 400 次抽样：谁算「最公平」的胜出率</h4>
+        <svg viewBox="0 0 560 290" style="width:100%;margin-top:6px"><g stroke="#6B4A2F" stroke-opacity=".18"><line x1="60" y1="232.0" x2="540" y2="232.0"/><line x1="60" y1="184.0" x2="540" y2="184.0" stroke-dasharray="3 4"/><line x1="60" y1="136.0" x2="540" y2="136.0" stroke-dasharray="3 4"/><line x1="60" y1="88.0" x2="540" y2="88.0" stroke-dasharray="3 4"/><line x1="60" y1="40.0" x2="540" y2="40.0" stroke-dasharray="3 4"/></g><g font-size="10" fill="#5A4534" text-anchor="end" font-family="Consolas,monospace"><text x="54" y="235.5">0%</text><text x="54" y="187.5">25%</text><text x="54" y="139.5">50%</text><text x="54" y="91.5">75%</text><text x="54" y="43.5">100%</text></g><rect x="117.0" y="40.0" width="34" height="192.0" fill="#1E7A8C" rx="2"/><text x="134.0" y="35.0" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">100%</text><text x="134.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">按亩</text><rect x="163.0" y="230.8" width="34" height="1.2" fill="#B4552E" rx="2"/><text x="180.0" y="225.8" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">0%</text><text x="180.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">按户</text><rect x="209.0" y="230.8" width="34" height="1.2" fill="#B98A3C" rx="2"/><text x="226.0" y="225.8" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">0%</text><text x="226.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">轮灌</text><text x="180.0" y="266" font-size="11" fill="#6B4A2F" text-anchor="middle" font-weight="700">亩均基尼最优</text><rect x="357.0" y="49.6" width="34" height="182.4" fill="#1E7A8C" rx="2"/><text x="374.0" y="44.6" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">95%</text><text x="374.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">按亩</text><rect x="403.0" y="222.4" width="34" height="9.6" fill="#B4552E" rx="2"/><text x="420.0" y="217.4" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">5%</text><text x="420.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">按户</text><rect x="449.0" y="230.8" width="34" height="1.2" fill="#B98A3C" rx="2"/><text x="466.0" y="225.8" font-size="10" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace">0%</text><text x="466.0" y="247" font-size="10" fill="#5A4534" text-anchor="middle">轮灌</text><text x="420.0" y="266" font-size="11" fill="#6B4A2F" text-anchor="middle" font-weight="700">满足率最优</text></svg>
+        <p class="note" style="margin-top:0">同时对四项参数施加随机扰动：田亩差异 ±15% · 来水保证率 ±12% · 渗漏强度 ±30% · 需水定额 ±8%。
+        <b>按亩在 95% 的抽样里仍然是满足率最优</b>——
+        但它<b style="color:var(--clay)">不是必胜</b>：仍有 5% 的情形下按户胜出。
+        作品给出的是带胜率的判断，而不是一句断言。</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:12px 16px;border-color:rgba(180,85,46,.4)">
+          <h4 style="color:#8f3f1e">有人把自家的刻口凿宽 25%</h4>
+          <div style="display:flex;align-items:baseline;gap:10px;margin:6px 0 4px">
+            <span class="num" style="color:#8f3f1e">+272.97 <small>m³</small></span>
+            <span class="badge no">其余 7 户合计正好损失 273.00 m³</span>
+          </div>
+          <p>多拿的每一立方米，都能在别人的田里找到出处——<b>侵占账逐户列清</b>：
+          H08 −52.3、H04 −42.1、H07 −41.4、H01 −39.0 m³。</p>
+        </div>
+        <div class="card" style="padding:12px 16px">
+          <h4>凿宽了多少？肉眼能不能发现</h4>
+          <p>按亩规则下 H05 的刻口份额被放大 25%，反算成矩形薄壁堰口宽，
+          对应<b style="color:var(--clay)">实际加宽 8.88 mm</b>。
+          凿宽 8.88 mm，巡水时肉眼可辨——这就是为什么「偷改木刻」在传统村寨里属于重罪：
+          <b>它看得见。</b></p>
+        </div>
+        <div class="card" style="padding:12px 16px;background:rgba(30,122,140,.08);border-color:rgba(30,122,140,.35)">
+          <h4 style="color:var(--water-deep)">故意保留了「不确定」</h4>
+          <p>抖动、篡改、推荐三组结果都不是唯一答案：扰动会翻盘、作弊能被量化但无法杜绝、
+          推荐随权重改变。<b>作品不给出「应当怎样」，只保证每一句话都能被重新算一遍。</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ P18 到田推演 · 判断与节律 ═════════════════ -->
+<section class="slide v-grid">
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>07 · 到田推演 / 判断与节律</span></header>
+  <div class="pad">
+    <div class="z" style="margin-top:12px">
+      <div class="eyebrow">07 · 到田推演 / 判断与节律 <b>DECISION &amp; SEASON</b></div>
+      <div class="h1">给什么权重，就有什么答案；<em>水还会随季节变</em></div>
+      <div class="rule-line" style="margin-bottom:8px"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:470px 1fr;gap:20px" class="z">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:12px 14px">
+          <h4 style="margin:0">多准则推荐（TOPSIS）：权重一改，冠军就换人</h4>
+          <table class="tbl" style="margin-top:6px;font-size:11.5px">
+            <thead><tr><th>权重取向</th><th>推荐</th><th>三规则得分</th></tr></thead>
+            <tbody><tr><td><b>四项均衡</b></td><td class="mono">按亩</td><td class="mono">按亩 0.942 · 按户 0.059 · 轮灌 0.057</td></tr><tr><td><b>只看公平</b></td><td class="mono">按亩</td><td class="mono">按亩 1.000 · 轮灌 0.020 · 按户 0.000</td></tr><tr><td><b>只看满足率</b></td><td class="mono">按亩</td><td class="mono">按亩 1.000 · 按户 0.102 · 轮灌 0.000</td></tr><tr><td><b>只看低渗漏</b></td><td class="mono">按户</td><td class="mono">按户 1.000 · 轮灌 0.905 · 按亩 0.000</td></tr></tbody>
+          </table>
+          <p class="note" style="margin-top:6px">前三种取向都指向按亩；<b style="color:var(--clay)">一旦把权重全压在「少漏水」上，冠军翻成按户</b>
+          （得分 1.000）——此时亩均基尼却是三者里最差的 0.1412。
+          <b>推荐的价值不在替人做主，而在把「你在乎什么」摆到台面上。</b></p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:12px 14px">
+          <h4 style="margin:0">灌溉期 120 天：来水的节律决定了紧日子有几天</h4>
+          <svg viewBox="0 0 620 300" style="width:100%;margin-top:6px"><g stroke="#6B4A2F" stroke-opacity=".18"><line x1="58" y1="246.0" x2="588" y2="246.0"/><line x1="58" y1="192.0" x2="588" y2="192.0" stroke-dasharray="3 4"/><line x1="58" y1="138.0" x2="588" y2="138.0" stroke-dasharray="3 4"/><line x1="58" y1="84.0" x2="588" y2="84.0" stroke-dasharray="3 4"/><line x1="58" y1="30.0" x2="588" y2="30.0" stroke-dasharray="3 4"/></g><g font-size="10" fill="#5A4534" text-anchor="end" font-family="Consolas,monospace"><text x="52" y="249.5">0%</text><text x="52" y="195.5">25%</text><text x="52" y="141.5">50%</text><text x="52" y="87.5">75%</text><text x="52" y="33.5">100%</text></g><polyline points="58.0,174.8 62.5,176.9 66.9,165.3 71.4,169.5 75.8,164.6 80.3,168.2 84.7,166.1 89.2,160.9 93.6,158.8 98.1,151.1 102.5,144.8 107.0,140.4 111.4,139.4 115.9,127.0 120.4,137.2 124.8,123.3 129.3,116.1 133.7,127.8 138.2,112.0 142.6,121.8 147.1,115.3 151.5,110.0 156.0,108.8 160.4,102.1 164.9,100.8 169.3,94.8 173.8,82.8 178.3,80.0 182.7,72.1 187.2,71.7 191.6,53.8 196.1,71.6 200.5,78.4 205.0,50.4 209.4,77.8 213.9,56.0 218.3,55.0 222.8,69.0 227.2,50.2 231.7,81.5 236.2,48.0 240.6,82.1 245.1,70.8 249.5,69.7 254.0,67.0 258.4,80.6 262.9,76.5 267.3,83.8 271.8,77.8 276.2,104.2 280.7,87.9 285.1,90.8 289.6,120.6 294.1,117.4 298.5,111.7 303.0,130.7 307.4,117.2 311.9,127.6 316.3,133.0 320.8,146.4 325.2,137.9 329.7,140.6 334.1,146.6 338.6,150.9 343.0,164.8 347.5,156.2 351.9,158.1 356.4,167.5 360.9,163.1 365.3,163.6 369.8,177.7 374.2,170.6 378.7,170.2 383.1,175.4 387.6,175.9 392.0,179.2 396.5,182.7 400.9,178.6 405.4,189.4 409.8,186.2 414.3,182.7 418.8,182.4 423.2,189.9 427.7,187.3 432.1,184.9 436.6,188.0 441.0,191.3 445.5,185.3 449.9,187.0 454.4,193.3 458.8,186.7 463.3,182.5 467.7,191.0 472.2,187.9 476.7,184.0 481.1,187.0 485.6,194.2 490.0,187.1 494.5,190.8 498.9,185.9 503.4,194.4 507.8,186.4 512.3,184.8 516.7,184.6 521.2,186.6 525.6,188.5 530.1,194.1 534.6,184.7 539.0,189.6 543.5,185.8 547.9,185.0 552.4,184.6 556.8,183.6 561.3,191.8 565.7,194.2 570.2,188.9 574.6,189.1 579.1,184.6 583.5,186.1 588.0,189.7" fill="none" stroke="#B98A3C" stroke-width="2" stroke-opacity=".85"/><polyline points="58.0,147.4 62.5,150.2 66.9,134.2 71.4,140.0 75.8,133.3 80.3,138.3 84.7,135.3 89.2,128.1 93.6,125.3 98.1,114.5 102.5,105.8 107.0,99.8 111.4,98.4 115.9,81.1 120.4,95.3 124.8,76.1 129.3,66.7 133.7,82.3 138.2,62.0 142.6,73.9 147.1,65.8 151.5,59.9 156.0,58.6 160.4,52.3 164.9,51.2 169.3,46.1 173.8,38.8 178.3,37.4 182.7,34.1 187.2,34.0 191.6,30.0 196.1,34.0 200.5,36.6 205.0,30.0 209.4,36.3 213.9,30.1 218.3,30.0 222.8,33.0 227.2,30.0 231.7,38.2 236.2,30.0 240.6,38.5 245.1,33.7 249.5,33.3 254.0,32.3 258.4,37.7 262.9,35.7 267.3,39.3 271.8,36.3 276.2,54.1 280.7,41.6 285.1,43.5 289.6,72.3 294.1,68.3 298.5,61.5 303.0,86.3 307.4,68.0 311.9,82.0 316.3,89.4 320.8,108.1 325.2,96.2 329.7,100.1 334.1,108.3 338.6,114.3 343.0,133.5 347.5,121.6 351.9,124.2 356.4,137.3 360.9,131.2 365.3,131.9 369.8,151.3 374.2,141.6 378.7,141.0 383.1,148.2 387.6,148.9 392.0,153.5 396.5,158.3 400.9,152.6 405.4,167.5 409.8,163.2 414.3,158.3 418.8,157.9 423.2,168.3 427.7,164.7 432.1,161.3 436.6,165.7 441.0,170.2 445.5,161.9 449.9,164.3 454.4,172.9 458.8,163.8 463.3,158.0 467.7,169.8 472.2,165.5 476.7,160.2 481.1,164.3 485.6,174.3 490.0,164.4 494.5,169.5 498.9,162.7 503.4,174.5 507.8,163.5 512.3,161.3 516.7,161.0 521.2,163.7 525.6,166.3 530.1,174.1 534.6,161.2 539.0,167.9 543.5,162.6 547.9,161.5 552.4,161.0 556.8,159.6 561.3,171.0 565.7,174.2 570.2,167.0 574.6,167.2 579.1,160.9 583.5,163.0 588.0,168.0" fill="none" stroke="#1E7A8C" stroke-width="2.4"/><line x1="58" y1="118.9" x2="588" y2="118.9" stroke="#B98A3C" stroke-width="1.2" stroke-dasharray="5 4" stroke-opacity=".7"/><text x="586" y="113.9" font-size="9.5" fill="#8A6A2C" text-anchor="end">供水因子 = 1.0（平水）</text><g font-size="9.5" fill="#5A4534" text-anchor="middle" font-family="Consolas,monospace"><text x="58.0" y="262">第1天</text><text x="187.2" y="262">第30天</text><text x="320.8" y="262">第60天</text><text x="454.4" y="262">第90天</text><text x="588.0" y="262">第120天</text></g><g font-size="10.5" fill="#5A4534"><rect x="64" y="34" width="14" height="4" fill="#1E7A8C"/><text x="84" y="41">需求满足率（左轴）</text><rect x="208" y="34" width="14" height="4" fill="#B98A3C"/><text x="228" y="41">供水因子（右轴 0–1.7）</text></g></svg>
+        </div>
+        <div class="grid-4" style="grid-template-columns:repeat(4,1fr)">
+          <div class="kpi"><div class="num" style="color:#8f3f1e">93<small>/120 天</small></div><div class="lbl">供水不足的天数（77.5%）</div></div>
+          <div class="kpi"><div class="num">33.1%</div><div class="lbl">最差一天的满足率</div></div>
+          <div class="kpi"><div class="num">0.988</div><div class="lbl">来水与满足率的相关系数</div></div>
+          <div class="kpi"><div class="num">81.5%</div><div class="lbl">默认场景水的有效利用率</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="note z" style="margin-top:6px">※ 季节性模型：钟形雨季 + 旱季下限 0.45、峰值倍数可调，叠加 10% 随机项；
+    相关 0.9883 说明<b>满足率几乎完全被来水节律支配</b>——规则能削峰但不能凭空造水。
+    网页「推演台 · 灌溉期」页可改天数、峰位与下限自行复跑。</p>
+  </div>
+</section>
+
+
+<!-- ═════════════════ P16 可验证性证据 ═════════════════ -->
+<section class="slide v-grid">
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>08 · 可验证性证据</span></header>
+  <div class="pad">
+    <div class="z" style="margin-top:12px">
+      <div class="eyebrow">08 · 可验证性 <b>PROOF</b></div>
       <div class="h1">证据不是自评，是<em>跑出来的结果</em></div>
       <div class="rule-line" style="margin-bottom:12px"></div>
     </div>
@@ -1129,10 +1271,10 @@ PASS&nbsp;&nbsp;F1–F2&nbsp;&nbsp;逐日账本 · 全数值无 NaN<br>
 
 <!-- ═════════════════ P17 应用价值 ═════════════════ -->
 <section class="slide">
-  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>08 · 应用价值</span></header>
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>09 · 应用价值</span></header>
   <div class="pad">
     <div class="z" style="margin-top:14px">
-      <div class="eyebrow">08 · 应用价值 <b>VALUE</b></div>
+      <div class="eyebrow">09 · 应用价值 <b>VALUE</b></div>
       <div class="h1">它解决<em>谁的什么问题</em></div>
       <div class="rule-line"></div>
     </div>
@@ -1170,10 +1312,10 @@ PASS&nbsp;&nbsp;F1–F2&nbsp;&nbsp;逐日账本 · 全数值无 NaN<br>
 
 <!-- ═════════════════ P18 局限与边界 ═════════════════ -->
 <section class="slide">
-  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>08 · 边界与局限</span></header>
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>09 · 边界与局限</span></header>
   <div class="pad">
     <div class="z" style="margin-top:14px">
-      <div class="eyebrow">08 · 边界与局限 <b>LIMITATIONS · 如实声明</b></div>
+      <div class="eyebrow">09 · 边界与局限 <b>LIMITATIONS · 如实声明</b></div>
       <div class="h1">先把<em>做不到的</em>说清楚</div>
       <div class="rule-line"></div>
     </div>
@@ -1212,10 +1354,10 @@ PASS&nbsp;&nbsp;F1–F2&nbsp;&nbsp;逐日账本 · 全数值无 NaN<br>
 
 <!-- ═════════════════ P19 团队与致谢 ═════════════════ -->
 <section class="slide">
-  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>08 · 团队与致谢</span></header>
+  <header class="chrome"><span class="c-brand"><i></i>木刻分水 · The Notched Ledger</span><span>09 · 团队与致谢</span></header>
   <div class="pad">
     <div class="z" style="margin-top:14px">
-      <div class="eyebrow">08 · 团队分工与原创贡献 <b>TEAM</b></div>
+      <div class="eyebrow">09 · 团队分工与原创贡献 <b>TEAM</b></div>
       <div class="h1">算法、制度、视觉，<em>三条线各自跑通</em></div>
       <div class="rule-line"></div>
     </div>
@@ -1368,12 +1510,18 @@ PASS&nbsp;&nbsp;F1–F2&nbsp;&nbsp;逐日账本 · 全数值无 NaN<br>
     a.addEventListener('click', function (e) { e.preventDefault(); go(parseInt(a.dataset.go, 10)); });
   });
 
-  /* 16:9 等比缩放适配任意窗口 */
+  /* 16:9 等比缩放适配任意窗口（含手机竖屏/横屏） */
   function fit() {
-    var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-    deck.style.transform = 'scale(' + s + ')';
+    var w = document.documentElement.clientWidth || window.innerWidth;
+    var h = document.documentElement.clientHeight || window.innerHeight;
+    if (!w || !h) return;
+    var s = Math.min(w / 1280, h / 720);
+    deck.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
   }
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  document.addEventListener('fullscreenchange', function () { setTimeout(fit, 60); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
   fit();
   go(0);
 })();
