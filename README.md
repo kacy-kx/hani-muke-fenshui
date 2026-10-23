@@ -17,10 +17,3 @@
 python -m http.server 8000
 # 打开 http://localhost:8000
 ```
-
-## 答辩演示（20 页）
-
-`deck/index.html` 是答辩用演示文稿（单文件 HTML，截图已 base64 内嵌，可离线双击打开）。
-
-- ← / → 翻页，F 全屏，自动适配 16:9
-- 在线访问：<https://kacy-kx.github.io/hani-muke-fenshui/deck/>

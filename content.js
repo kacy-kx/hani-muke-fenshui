@@ -145,10 +145,21 @@ window.CONTENT = {
       ]
     },
 
+    /* ---------------- 交互：推演台 ---------------- */
+    {
+      type: 'sim', id: 'bench', nav: { zh: '推演台', en: 'Scenarios' }, mount: 'workbench',
+      eyebrow: { zh: '05 从名义份额到到田水量', en: '05 From nominal shares to water in the field' },
+      title: { zh: '纸上写得平，不等于田里到得平', en: 'Equal on paper is not equal in the field' },
+      lead: {
+        zh: '前面那台账本算的是名义份额——谁占几成，写在纸上、刻在木头上。可水从山箐下来还要走一段路：走一段就渗一段，渗出去的水有一部分又被下方的田重新接住；灌溉的时间也不均匀，雨季水多时有弃，旱季水少时要轮。这台推演台把四个维度接进同一个内核——空间（输水链）、随机性（抽样）、人为动作（私刻口）、判断（准则权重）。五个页面共用一套参数，改动任意一项，图形与指标一起重算；每页都能导出 CSV 或复制带参数的链接。所有数字都由浏览器里的同一批函数现算，改动即可验证。',
+        en: 'The previous ledger computes nominal shares — who gets what fraction, written on paper and carved in wood. But water still has to travel: it seeps along the way, a part of that seepage is recaptured by the terraces below, and the season is uneven, with surplus mid-monsoon and scarcity at the edges. This bench feeds four more dimensions into the same kernel — space (the conveyance chain), randomness (drawing from perturbed parameters), human agency (a widened notch), and judgement (criterion weights). Five panels share one parameter set; every figure and metric recomputes as you move anything. Each panel exports CSV and can copy a link that carries the exact parameters. Everything here is computed live by the same functions in the browser.'
+      }
+    },
+
     /* ---------------- 数据 ---------------- */
     {
       type: 'dataviz', id: 'data', nav: { zh: '实测数据', en: 'Measured' },
-      eyebrow: { zh: '05 本作品模型输出', en: '05 Output of this work’s model' },
+      eyebrow: { zh: '06 本作品模型输出', en: '06 Output of this work’s model' },
       title: { zh: '同一场旱情下，三种分法的数字', en: 'One drought, three sets of numbers' },
       lead: {
         zh: '下表由 `algo.js` 在固定参数下算得（`node test/t04.test.cjs` 可复跑，33 条断言全通过）。全部数值都是本作品模型输出，不是任何村寨的统计值；来水量按"总需求 × 保证率"构造。',
@@ -187,7 +198,7 @@ window.CONTENT = {
     /* ---------------- 制度沿革 ---------------- */
     {
       type: 'timeline', id: 'time', nav: { zh: '沿革', en: 'Context' },
-      eyebrow: { zh: '06 从习惯法到名录', en: '06 From customary rule to heritage list' },
+      eyebrow: { zh: '07 从习惯法到名录', en: '07 From customary rule to heritage list' },
       title: { zh: '一套分水规矩，如何被看见', en: 'How a water rule became visible' },
       lead: {
         zh: '以下节点的年代与名称以公开来源为准（见文末清单）。本作品不对制度的起源年代作学术结论；未标注来源的表述一律不写。',
@@ -205,7 +216,7 @@ window.CONTENT = {
     /* ---------------- 术语库 ---------------- */
     {
       type: 'library', id: 'terms', nav: { zh: '术语', en: 'Lexicon' },
-      eyebrow: { zh: '07 术语库（28 条）', en: '07 Lexicon (28 entries)' },
+      eyebrow: { zh: '08 术语库（28 条）', en: '08 Lexicon (28 entries)' },
       title: { zh: '读懂这本水账需要的词', en: 'The words you need to read this ledger' },
       lead: {
         zh: '制度与遗产类术语以公开来源为限；算法与水工类术语按通用定义给出，并在释义中标明哪些是本作品的自设参数。',
@@ -246,7 +257,7 @@ window.CONTENT = {
     /* ---------------- 来源与披露 ---------------- */
     {
       type: 'sources', id: 'src', nav: { zh: '来源', en: 'Sources' },
-      eyebrow: { zh: '08 来源与披露', en: '08 Sources & disclosure' },
+      eyebrow: { zh: '09 来源与披露', en: '09 Sources & disclosure' },
       title: { zh: '每一条事实的去处', en: 'Where every fact comes from' },
       lead: {
         zh: '本作品把材料分成两类：来自公开资料的"制度与遗产事实"，和由本作品算法算出的"模型输出"。两类不混写、不互证。',

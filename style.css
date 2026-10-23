@@ -153,6 +153,12 @@ input[type=range]{width:100%;accent-color:var(--accent);background:transparent}
   border-bottom:1px dashed var(--line);padding-bottom:6px}
 .metrics b{font-family:var(--mono);color:var(--txt);font-weight:400}
 
+/* ---------- 推演台（engine.js + bench.js） ---------- */
+.bench-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 clamp(12px,1.6vw,18px)}
+.bench-tabs .chip{font-size:12px;letter-spacing:.02em}
+label.row.bench-row{grid-template-columns:1fr auto clamp(96px,11vw,150px);align-items:center;gap:10px}
+label.row.bench-row input[type=range]{min-width:0}
+
 /* ---------- 数据 ---------- */
 .viz{display:grid;gap:22px}
 .bars{display:grid;gap:10px}
